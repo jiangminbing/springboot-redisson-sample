@@ -137,6 +137,19 @@ public class TestController {
         System.out.println("线程竞争结束了");
         return "success";
     }
+    @ApiOperation(value = "测试方法", notes = "测试方法")
+    @GetMapping(value = "private/test4")
+    public String test5(
+            @RequestParam("name")String name
+    ) throws InterruptedException {
+        RLock lock = redissonClient.getLock("redissonLock");
+        // 100s 自动释放锁
+        lock.lock();
+        System.out.println("线程信息"+Thread.currentThread().getName()+"获取锁");
+        TimeUnit.SECONDS.sleep(1000);
+        lock.unlock();
+        return "success";
+    }
 
 
 
